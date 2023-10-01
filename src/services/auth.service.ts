@@ -27,6 +27,7 @@ export const add = async (req, res, next) => {
         const hashedPassword = await bcrypt.hash(password, 10)
         const user = new User({ firstName, lastName, password: hashedPassword, email });
         await user.save();
+        const { firstName: userFirstName, lastName: userLastName, email: userEmail } = user.toObject()
 
         const token = jwt.sign(
             { user_id: user._id, email },
@@ -36,7 +37,7 @@ export const add = async (req, res, next) => {
             }
         );
 
-        successHandler(res, "Successfully added", { ...user, token });
+        successHandler(res, "Successfully added", { firstName: userFirstName, lastName: userLastName, email: userEmail, token });
     } catch (e) {
         next(e)
     }
@@ -59,7 +60,10 @@ export const login = async (req, res, next) => {
             throw new ResourceNotFoundError('User:Login');
         }
 
-        const isMatching = await bcrypt.compare(password, user.password)
+        const { firstName, lastName, password: hashedPassword } = user.toObject()
+
+
+        const isMatching = await bcrypt.compare(password, hashedPassword)
         if (!isMatching) {
             throw new BadRequest('User:Login', httpStatusCode.UNAUTHORIZED, 'Invalid Credentials', true, INVALID_CREDENTIALS);
         }
@@ -71,7 +75,7 @@ export const login = async (req, res, next) => {
                 expiresIn: "2h",
             }
         );
-        successHandler(res, "", { ...user, token });
+        successHandler(res, "", { firstName, lastName, email, token });
 
     } catch (err) {
         next(err);

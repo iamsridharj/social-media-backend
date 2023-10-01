@@ -1,8 +1,10 @@
 import express from "express";
-import * as authController from "../services/auth.service"
+import postController from "../services/post.service";
+import verifyToken from "../middleware/authentication";
 
 const router = express.Router();
 
-router.post('/', authController.add);
+router.post('/', verifyToken, postController.add);
+router.get('/all', postController.getAllPost);
 
 export default router;
