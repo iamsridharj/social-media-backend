@@ -1,6 +1,5 @@
-import httpStatusCode from "http-status-codes";
 
-import { BadRequest, ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
+import { ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
 import User from "../models/User.model";
 import Post from "../models/Post.model";
 import { successHandler } from "../utils/responseHandlers/responseUtils";
@@ -35,10 +34,12 @@ const add = async (req, res, next) => {
 const getAllPost = async (req, res, next) => {
     try {
 
-        const post = await Post.find().populate({
-            path: "author",
-            select: "firstName lastName email"
-        });
+        const post = await Post.find()
+            .populate({
+                path: "author",
+                select: "firstName lastName email "
+            })
+
         successHandler(res, "", post)
 
     } catch (e) {

@@ -5,6 +5,7 @@ export interface PostDoc extends Document {
     title: string;
     description: string;
     author: mongoose.Types.ObjectId;
+    comments: [mongoose.Types.ObjectId];
     _id: mongoose.Types.ObjectId;
 }
 

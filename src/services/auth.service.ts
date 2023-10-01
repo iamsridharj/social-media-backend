@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+
 import httpStatusCode from "http-status-codes";
 
+import { signJwt } from "../utils/signJwt";
 import { successHandler } from "../utils/responseHandlers/responseUtils";
 import { BadRequest, ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
 import { INVALID_CREDENTIALS, DUPLICATE_USER_FOUND, BAD_REQUEST } from "../utils/errorHandlers/errorKeys";
@@ -29,13 +30,7 @@ export const add = async (req, res, next) => {
         await user.save();
         const { firstName: userFirstName, lastName: userLastName, email: userEmail } = user.toObject()
 
-        const token = jwt.sign(
-            { user_id: user._id, email },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "24h",
-            }
-        );
+        const token = signJwt(user);
 
         successHandler(res, "Successfully added", { firstName: userFirstName, lastName: userLastName, email: userEmail, token });
     } catch (e) {
@@ -68,13 +63,7 @@ export const login = async (req, res, next) => {
             throw new BadRequest('User:Login', httpStatusCode.UNAUTHORIZED, 'Invalid Credentials', true, INVALID_CREDENTIALS);
         }
 
-        const token = jwt.sign(
-            { user_id: user._id, email },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
-            }
-        );
+        const token = signJwt(user);
         successHandler(res, "", { firstName, lastName, email, token });
 
     } catch (err) {
