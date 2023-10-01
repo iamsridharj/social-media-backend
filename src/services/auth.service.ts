@@ -2,12 +2,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import httpStatusCode from "http-status-codes";
 
-import { successHandler } from "../../utils/responseHandlers/responseUtils";
-import { BadRequest, ResourceNotFoundError } from "../../utils/errorHandlers/errorClasses";
-import { INVALID_CREDENTIALS, DUPLICATE_USER_FOUND, BAD_REQUEST } from "../../utils/errorHandlers/errorKeys";
+import { successHandler } from "../utils/responseHandlers/responseUtils";
+import { BadRequest, ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
+import { INVALID_CREDENTIALS, DUPLICATE_USER_FOUND, BAD_REQUEST } from "../utils/errorHandlers/errorKeys";
 
 
-import User from "../../models/User";
+import User from "../models/User.model";
 
 const isExistingUser = async (searchObject) => {
     const isExistingUser = await User.find(searchObject).count();
