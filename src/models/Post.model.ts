@@ -20,7 +20,11 @@ const PostSchema: Schema = new MongooseSchema({
     author: {
         type: MongooseSchema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    comments: [{
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'Comment'
+    }]
 },
     {
         versionKey: false,

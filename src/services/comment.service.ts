@@ -8,23 +8,21 @@ const addComment = async (req, res, next) => {
         const { postId } = req.query;
         const { userId } = req.user;
 
-        console.log({
-            postId
-        })
         const postDoc = await PostModel.findById(postId);
-
         if (!postDoc) {
             throw new ResourceNotFoundError("Comment:addComment")
         }
-
-
         const { comment } = req.body;
         const commentDoc = await new CommentModel({
             comment,
-            authorId: userId,
+            commentedBy: userId,
             postId,
         });
         await commentDoc.save();
+        const post = postDoc.toObject();
+        post.comments.push(commentDoc._id);
+        const updatedPostDoc = await PostModel.findByIdAndUpdate(postId, post);
+        await updatedPostDoc?.save();
         successHandler(res, "comments saved successfully", commentDoc)
 
     } catch (error) {

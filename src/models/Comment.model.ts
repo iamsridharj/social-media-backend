@@ -3,14 +3,14 @@ const MongooseSchema = mongoose.Schema;
 
 export interface CommentDoc extends Document {
     comment: string;
-    authorId: mongoose.Types.ObjectId;
+    commentedBy: mongoose.Types.ObjectId;
     postId: mongoose.Types.ObjectId;
     _id: mongoose.Types.ObjectId;
 }
 
 const CommentSchema: Schema = new MongooseSchema({
     comment: String,
-    author: {
+    commentedBy: {
         type: MongooseSchema.Types.ObjectId,
         ref: 'User'
     },

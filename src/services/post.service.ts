@@ -19,10 +19,10 @@ const add = async (req, res, next) => {
 
         const postDoc = new Post({ title, description, author: user._id });
         await postDoc.save();
-        const post = await postDoc.populate({
-            path: "author",
-            select: "firstName lastName email"
-        })
+        const post = await postDoc
+            .populate({
+                path: "author comments",
+            })
         successHandler(res, "", post)
 
     } catch (e) {
@@ -37,7 +37,16 @@ const getAllPost = async (req, res, next) => {
         const post = await Post.find()
             .populate({
                 path: "author",
-                select: "firstName lastName email "
+                select: "firstName lastName email"
+            })
+            .populate({
+                path: "comments",
+                populate: [
+                    {
+                        path: "commentedBy",
+                        select: "firstName lastName"
+                    },
+                ]
             })
 
         successHandler(res, "", post)
