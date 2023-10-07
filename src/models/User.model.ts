@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Document } from "mongoose";
 const MongooseSchema = mongoose.Schema;
 
 export interface UserDoc extends Document {
@@ -19,6 +19,10 @@ const User = new MongooseSchema({
     },
     lastName: String,
     password: String,
+    profileImage: {
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'File'
+    },
     crearedAt: {
         required: false,
         type: Date,

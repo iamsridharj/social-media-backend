@@ -1,11 +1,13 @@
 import express from "express";
-import authentication from "./auth.api";
-import post from "./post.api";
+import authenticationApi from "./auth.api";
+import postApi from "./post.api";
+import uploadApi from "./upload.api";
 
 
 const router = express.Router();
 
-router.use("/auth", authentication);
-router.use("/post", post);
+router.use("/auth", authenticationApi);
+router.use("/post", postApi);
+router.use("/upload", uploadApi)
 
 export default router;

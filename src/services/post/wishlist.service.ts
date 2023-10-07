@@ -24,7 +24,6 @@ const addToWishlist = async (req, res, next) => {
         const post = postDoc.toObject();
 
         post.isInWishlist = isAddingToWish;
-        console.log(post, "isAddingToWish")
 
         await PostModel.findByIdAndUpdate(postId, post);
         successHandler(res, "comments saved successfully", post)

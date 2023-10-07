@@ -17,7 +17,7 @@ const isExistingUser = async (searchObject) => {
 
 export const add = async (req, res, next) => {
     try {
-        const { firstName, lastName, password, email } = req.body;
+        const { firstName, lastName, password, email, profileImage } = req.body;
         if (!password || password?.length < 6) {
             throw new BadRequest('User:Create', undefined, 'Must provide a password of more than 6 characters', true, INVALID_CREDENTIALS);
         }
@@ -26,7 +26,7 @@ export const add = async (req, res, next) => {
             throw new BadRequest('User:Create', undefined, 'User already exists', true, DUPLICATE_USER_FOUND);
         }
         const hashedPassword = await bcrypt.hash(password, 10)
-        const user = new User({ firstName, lastName, password: hashedPassword, email });
+        const user = new User({ firstName, lastName, password: hashedPassword, email, profileImage });
         await user.save();
         const { firstName: userFirstName, lastName: userLastName, email: userEmail } = user.toObject()
 
