@@ -1,7 +1,7 @@
-import { BadRequest, ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
-import PostModel from "../models/Post.model";
-import CommentModel from "../models/Comment.model";
-import { successHandler } from "../utils/responseHandlers/responseUtils";
+import { ResourceNotFoundError } from "../../utils/errorHandlers/errorClasses";
+import PostModel from "../../models/Post.model";
+import CommentModel from "../../models/Comment.model";
+import { successHandler } from "../../utils/responseHandlers/responseUtils";
 
 const addComment = async (req, res, next) => {
     try {
@@ -37,7 +37,7 @@ const getComments = async (req, res, next) => {
 
 
         if (!postId) {
-            throw new BadRequest("Comment:getComment")
+            throw new ResourceNotFoundError("Comment:getComment")
         }
 
 
@@ -53,5 +53,5 @@ const getComments = async (req, res, next) => {
 
 export default {
     addComment,
-    getComments
+    getComments,
 }

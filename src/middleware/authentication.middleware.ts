@@ -9,15 +9,13 @@ const jwt = require("jsonwebtoken");
 const config = process.env;
 
 const verifyToken = async (req, res, next) => {
-    const token =
-        req.body.token || req.query.token || req.headers["authorization"];
-
-
-    if (!token) {
-        throw new BadRequest("middleware:verifyToken", httpStatusCode.UNAUTHORIZED, "Invalid token", true, UNAUTHORIZED)
-    }
-
     try {
+        const token =
+            req.body.token || req.query.token || req.headers["authorization"];
+
+        if (!token) {
+            throw new BadRequest("middleware:verifyToken", httpStatusCode.UNAUTHORIZED, "Invalid token", true, UNAUTHORIZED)
+        }
         const decoded = jwt.verify(token, config.TOKEN_KEY);
         const user = await UserModel.findOne({ email: decoded.email })
         console.log(decoded, user)

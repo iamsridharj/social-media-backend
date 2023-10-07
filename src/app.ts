@@ -2,11 +2,9 @@ import express from "express";
 import apiRoutes from "./api";
 
 import * as errorUtils from "./utils/errorHandlers/errorUtils";
-import mongoConn from "./utils/db/dbClient";
+import mongoClient from "./utils/mongo/mongoClient";
 
-
-mongoConn.init();
-
+mongoClient();
 const app = express();
 
 app.use(express.json());

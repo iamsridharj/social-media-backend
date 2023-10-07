@@ -1,8 +1,8 @@
 
-import { ResourceNotFoundError } from "../utils/errorHandlers/errorClasses";
-import User from "../models/User.model";
-import Post from "../models/Post.model";
-import { successHandler } from "../utils/responseHandlers/responseUtils";
+import { ResourceNotFoundError } from "../../utils/errorHandlers/errorClasses";
+import User from "../../models/User.model";
+import Post from "../../models/Post.model";
+import { successHandler } from "../../utils/responseHandlers/responseUtils";
 
 
 const add = async (req, res, next) => {
