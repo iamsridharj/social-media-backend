@@ -18,7 +18,6 @@ const verifyToken = async (req, res, next) => {
         }
         const decoded = jwt.verify(token, config.TOKEN_KEY);
         const user = await UserModel.findOne({ email: decoded.email })
-        console.log(decoded, user)
         if (user) {
             req.user = {
                 userId: user._id,
