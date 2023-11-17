@@ -4,7 +4,6 @@ import apiRoutes from "./api";
 import * as errorUtils from "./utils/errorHandlers/errorUtils";
 import mongoClient from "./utils/mongo/mongoClient";
 
-mongoClient();
 const app = express();
 
 app.use(express.json());

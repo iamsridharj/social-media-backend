@@ -1,13 +1,15 @@
 
 import { ResourceNotFoundError } from "../../utils/errorHandlers/errorClasses";
 import User from "../../models/User.model";
-import Post from "../../models/Post.model";
+import Post, { PostDoc } from "../../models/Post.model";
 import { successHandler } from "../../utils/responseHandlers/responseUtils";
-
+import conn from "../../utils/mongo/mongoClient";
 
 const add = async (req, res, next) => {
+    const session = await conn.startSession();
     try {
-        const { email } = req.user;
+        session.startTransaction();
+        const { email, userId } = req.user;
         const { title, description } = req.body;
 
         const userDoc = await User.findOne({ email })
@@ -19,14 +21,18 @@ const add = async (req, res, next) => {
 
         const postDoc = new Post({ title, description, author: user._id });
         await postDoc.save();
-        const post = await postDoc
+        let post = await postDoc
             .populate({
                 path: "author comments",
-            })
+            });
+        session.commitTransaction();
         successHandler(res, "", post)
 
     } catch (e) {
+        session.abortTransaction();
         next(e)
+    } finally {
+        session.endSession();
     }
 
 }
@@ -34,7 +40,9 @@ const add = async (req, res, next) => {
 const getAllPost = async (req, res, next) => {
     try {
 
-        const post = await Post.find()
+        const userId = req?.user?.userId || '';
+
+        let posts = await Post.find()
             .populate({
                 path: "author",
                 select: "firstName lastName email"
@@ -49,7 +57,8 @@ const getAllPost = async (req, res, next) => {
                 ]
             })
 
-        successHandler(res, "", post)
+
+        successHandler(res, "", posts)
 
     } catch (e) {
         next(e)

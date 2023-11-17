@@ -11,22 +11,21 @@ const addToWishlist = async (req, res, next) => {
 
         const isAddingToWish = action === "add";
 
-
-        const postDoc = await PostModel.findById(postId);
-        if (!postDoc) {
-            throw new ResourceNotFoundError("Comment:addComment")
+        if (isAddingToWish) {
+            const postDoc = await PostModel.findById(postId);
+            if (!postDoc) {
+                throw new ResourceNotFoundError("Comment:addComment")
+            }
+            const wishlistDoc = await new WishlistModel({
+                author: userId,
+                postId,
+            });
+            await wishlistDoc.save();
+            successHandler(res, "Successfully added to wishlist", wishlistDoc)
         }
-        const wishlistDoc = await new WishlistModel({
-            author: userId,
-            postId,
-        });
-        await wishlistDoc.save();
-        const post = postDoc.toObject();
 
-        post.isInWishlist = isAddingToWish;
 
-        await PostModel.findByIdAndUpdate(postId, post);
-        successHandler(res, "comments saved successfully", post)
+
 
     } catch (error) {
         next(error)

@@ -17,39 +17,39 @@ class BaseError extends Error {
 }
 
 export class ResourceNotFoundError extends BaseError {
-    constructor (
+    constructor(
         name,
         statusCode = httpStatusCode.NOT_FOUND,
         message = 'Resource not found.',
         isOperational = true
-        ) {
+    ) {
         super(name, statusCode, isOperational, message)
-        }       
+    }
 }
 
 export class BadRequest extends BaseError {
     errorKey: string;
-    constructor (
+    constructor(
         name,
         statusCode = httpStatusCode.BAD_REQUEST,
         message = 'Duplicate entry found',
         isOperational = true,
         errorKey = errorKeys.INTERNAL_SERVER_ERROR
-        ) {
+    ) {
         super(name, statusCode, isOperational, message)
         this.errorKey = errorKey;
-        }       
+    }
 }
 
 export class InternalServerError extends BaseError {
-    constructor (
+    constructor(
         name,
         statusCode = httpStatusCode.INTERNAL_SERVER_ERROR,
         description = 'Internal Server error.',
         isOperational = true
-        ) {
+    ) {
         super(name, statusCode, isOperational, description)
-        }  
+    }
 }
 
 export default BaseError;

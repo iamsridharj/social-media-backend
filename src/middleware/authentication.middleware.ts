@@ -32,4 +32,26 @@ const verifyToken = async (req, res, next) => {
     return next();
 };
 
+export const getInfoFromToken = async (req, res, next) => {
+    try {
+        const token =
+            req.body.token || req.query.token || req.headers["authorization"];
+
+        if (!token) {
+            return next();
+        }
+        const decoded = jwt.verify(token, config.TOKEN_KEY);
+        const user = await UserModel.findOne({ email: decoded.email })
+        if (user) {
+            req.user = {
+                userId: user._id,
+                email: user.email
+            };
+        }
+    } catch (err) {
+        return next(err);
+    }
+    return next();
+};
+
 export default verifyToken;
