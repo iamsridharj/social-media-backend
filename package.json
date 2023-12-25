@@ -6,7 +6,8 @@
   "scripts": {
     "preclean": "rimraf logs",
     "local:start": "NODE_ENV=development nodemon",
-    "production:start": "NODE_ENV=production node index.js"
+    "production:start": "NODE_ENV=production node index.js",
+    "deploy": "pm2 start npm --name \"social-media-node\" -- run production:start"
   },
   "keywords": [],
   "author": "",
