@@ -1,7 +1,7 @@
 
 import { ResourceNotFoundError } from "../../utils/errorHandlers/errorClasses";
 import User from "../../models/User.model";
-import Post, { PostDoc } from "../../models/Post.model";
+import Post from "../../models/Post.model";
 import { successHandler } from "../../utils/responseHandlers/responseUtils";
 import conn from "../../utils/mongo/mongoClient";
 
@@ -9,8 +9,8 @@ const add = async (req, res, next) => {
     const session = await conn.startSession();
     try {
         session.startTransaction();
-        const { email, userId } = req.user;
-        const { title, description } = req.body;
+        const { email } = req.user;
+        const { title, description, postType } = req.body;
 
         const userDoc = await User.findOne({ email })
         if (!userDoc) {
@@ -19,11 +19,12 @@ const add = async (req, res, next) => {
 
         const user = userDoc.toJSON();
 
-        const postDoc = new Post({ title, description, author: user._id });
+        const postDoc = new Post({ title, description, postType, author: user._id });
         await postDoc.save();
         let post = await postDoc
             .populate({
                 path: "author comments",
+                select:"firstName lastName email"
             });
         session.commitTransaction();
         successHandler(res, "", post)
@@ -56,6 +57,14 @@ const getAllPost = async (req, res, next) => {
                     },
                 ]
             })
+            .populate({
+                path: "objects",
+                populate: [
+                    {
+                        path: "fileUrl"
+                    },
+                ]
+            })
 
 
         successHandler(res, "", posts)
@@ -65,7 +74,26 @@ const getAllPost = async (req, res, next) => {
     }
 }
 
+const deletePost = async (req, res, next) => {
+    try {
+        const { postId } = req.query;
+
+        const deletedPost = await Post.findByIdAndDelete(postId);
+
+        if (!deletedPost) {
+            throw new ResourceNotFoundError('Post:delete');
+        }
+
+
+
+        successHandler(res, `Post deleted successfully with Id ${postId}`, {});
+    } catch (e) {
+        next(e);
+    }
+};
+
 export default {
     add,
-    getAllPost
+    getAllPost,
+    deletePost,
 }

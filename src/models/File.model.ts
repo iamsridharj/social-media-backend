@@ -6,6 +6,7 @@ export interface FileDoc extends Document {
     bucketName: String;
     fileKey: String;
     fileType: String;
+    fileUrl: String;
 }
 
 const File = new MongooseSchema({
@@ -18,6 +19,10 @@ const File = new MongooseSchema({
         type: String
     },
     fileType: {
+        required: true,
+        type: String,
+    },
+    fileUrl: {
         required: true,
         type: String,
     }

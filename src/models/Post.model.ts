@@ -16,8 +16,9 @@ export interface PostDoc extends Document {
 const PostSchema: Schema = new MongooseSchema({
     title: String,
     postType: {
-        required: false,
-        enum: ['article', 'video', 'gallery']
+        type: String,
+        required: true,
+        enum: ['video', 'gallery', 'image'] as const, 
     },
     description: {
         type: String,
@@ -31,8 +32,12 @@ const PostSchema: Schema = new MongooseSchema({
         type: MongooseSchema.Types.ObjectId,
         ref: 'Comment'
     }],
+    objects:[{
+        type: MongooseSchema.Types.ObjectId,
+        ref: 'File'
+    }],
     isInWishlist: MongooseSchema.Types.Boolean
-},
+    },
     {
         versionKey: false,
     }

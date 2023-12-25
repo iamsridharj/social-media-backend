@@ -13,4 +13,6 @@ router.post('/wishlist/:action', verifyToken, wishlistController.addToWishlist);
 router.get('/all', getInfoFromToken, postController.getAllPost);
 router.get('/comments', commentController.getComments);
 
+router.delete('/', getInfoFromToken, postController.deletePost);
+
 export default router;

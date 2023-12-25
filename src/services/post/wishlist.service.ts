@@ -23,14 +23,10 @@ const addToWishlist = async (req, res, next) => {
             await wishlistDoc.save();
             successHandler(res, "Successfully added to wishlist", wishlistDoc)
         }
-
-
-
-
+        next()
     } catch (error) {
         next(error)
     }
-
 }
 
 
