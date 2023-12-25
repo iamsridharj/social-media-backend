@@ -3,10 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "preclean": "rimraf logs",
     "local:start": "NODE_ENV=development nodemon",
-    "production:start": "NODE_ENV=production node index.js",
+    "move-env": "cp ./src/config/* ./dist/config",
+    "build": "tsc && npm run move-env",
+    "production:start": "npm run build && NODE_ENV=production node ./dist/server.js",
     "deploy": "pm2 start npm --name \"social-media-node\" -- run production:start"
   },
   "keywords": [],
