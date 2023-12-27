@@ -10,7 +10,7 @@ const add = async (req, res, next) => {
     try {
         session.startTransaction();
         const { email } = req.user;
-        const { title, description, postType } = req.body;
+        const { title, description, postType, objects } = req.body;
 
         const userDoc = await User.findOne({ email })
         if (!userDoc) {
@@ -19,7 +19,7 @@ const add = async (req, res, next) => {
 
         const user = userDoc.toJSON();
 
-        const postDoc = new Post({ title, description, postType, author: user._id });
+        const postDoc = new Post({ title, description, postType, author: user._id, objects });
         await postDoc.save();
         let post = await postDoc
             .populate({
