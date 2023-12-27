@@ -7,8 +7,8 @@
   "scripts": {
     "preclean": "rimraf logs",
     "local:start": "NODE_ENV=development nodemon",
-    "move-env": "cp ./src/config/* ./dist/config",
-    "build": "tsc && npm run move-env",
+    "copy-env": "cp ./src/config/* ./dist/config",
+    "build": "rimraf dist && tsc && npm run copy-env",
     "production:start": "npm run build && NODE_ENV=production node ./dist/server.js",
     "deploy": "pm2 start npm --name \"social-media-node\" -- run production:start"
   },

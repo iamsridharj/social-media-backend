@@ -6,13 +6,17 @@ import verifyToken, { getInfoFromToken } from "../middleware/authentication.midd
 
 const router = express.Router();
 
+// Routes for handling Post
+router.get('/all', getInfoFromToken, postController.getAllPost);
 router.post('/', verifyToken, postController.add);
+router.delete('/', getInfoFromToken, postController.deletePost);
+
+// Routes for handling Comments
+router.get('/comments', commentController.getComments);
 router.post('/comment', verifyToken, commentController.addComment);
+
+// Routes for handling Wishlist
 router.post('/wishlist/:action', verifyToken, wishlistController.addToWishlist);
 
-router.get('/all', getInfoFromToken, postController.getAllPost);
-router.get('/comments', commentController.getComments);
-
-router.delete('/', getInfoFromToken, postController.deletePost);
 
 export default router;

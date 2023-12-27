@@ -23,7 +23,7 @@ const add = async (req, res, next) => {
         await postDoc.save();
         let post = await postDoc
             .populate({
-                path: "author comments",
+                path: "author comments objects",
                 select:"firstName lastName email"
             });
         session.commitTransaction();
