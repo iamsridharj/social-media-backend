@@ -25,14 +25,16 @@ export const add = async (req, res, next) => {
         if (isExisting) {
             throw new BadRequest('User:Create', undefined, 'User already exists', true, DUPLICATE_USER_FOUND);
         }
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ firstName, lastName, password: hashedPassword, email, profileImage });
+
         await user.save();
-        const { firstName: userFirstName, lastName: userLastName, email: userEmail } = user.toObject()
-
+        await user.populate({
+            path: "profileImage",
+        });
+        const useObj = user.toObject()
         const token = signJwt(user);
-
-        successHandler(res, "Successfully added", { firstName: userFirstName, lastName: userLastName, email: userEmail, token });
+        successHandler(res, "Successfully added", { ...useObj, token });
     } catch (e) {
         next(e)
     }
@@ -41,30 +43,27 @@ export const add = async (req, res, next) => {
 export const login = async (req, res, next) => {
 
     try {
-        // Get user input
         const { email, password } = req.body;
 
-        // Validate user input
         if (!(email && password)) {
             throw new BadRequest('User:Login', httpStatusCode.BAD_REQUEST, 'Must provide email and Password', true, BAD_REQUEST);
         }
-        // Validate if user exist in our database
         const user = await User.findOne({ email });
 
         if (!user) {
             throw new ResourceNotFoundError('User:Login');
         }
 
-        const { firstName, lastName, password: hashedPassword } = user.toObject()
-
-
+        await user.populate({
+            path: "profileImage",
+        });
+        const { password: hashedPassword, ...rest } = user.toObject()
         const isMatching = await bcrypt.compare(password, hashedPassword)
         if (!isMatching) {
             throw new BadRequest('User:Login', httpStatusCode.UNAUTHORIZED, 'Invalid Credentials', true, INVALID_CREDENTIALS);
         }
-
         const token = signJwt(user);
-        successHandler(res, "", { firstName, lastName, email, token });
+        successHandler(res, "", { ...rest, token });
 
     } catch (err) {
         next(err);

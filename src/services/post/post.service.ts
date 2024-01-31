@@ -24,14 +24,15 @@ const add = async (req, res, next) => {
         const post = await Post.findById(newPost._id)
             .populate({
                 path: "author",
-                select: "firstName lastName email"
+                select: "firstName lastName email profileImage",
+                populate: { path: 'profileImage', populate: 'fileUrl' }
             })
             .populate({
                 path: "comments",
                 populate: [
                     {
                         path: "commentedBy",
-                        select: "firstName lastName"
+                        select: "firstName lastName",
                     },
                 ]
             })
@@ -61,7 +62,8 @@ const getAllPost = async (req, res, next) => {
         const posts = await Post.find()
             .populate({
                 path: "author",
-                select: "firstName lastName email"
+                select: "firstName lastName email profileImage", 
+                populate: { path: 'profileImage', populate: 'fileUrl' }
             })
             .populate({
                 path: "comments",

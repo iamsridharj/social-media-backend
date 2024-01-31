@@ -7,6 +7,7 @@ export interface UserDoc extends Document {
     lastName: string;
     password: string;
     crearedAt: Date;
+    profileImage: mongoose.Types.ObjectId; 
     _id: mongoose.Types.ObjectId;
 }
 

@@ -1,6 +1,5 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from 'sharp';
-import { Readable } from 'stream'; 
 import randomStringGenerator from "../../utils/randomStringGenerator";
 import { successHandler } from "../../utils/responseHandlers/responseUtils";
 import getFileUrlFromS3 from "./getFileUrlFromS3";
