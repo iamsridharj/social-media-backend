@@ -3,7 +3,7 @@ import cors from "cors";
 import apiRoutes from "./api";
 
 import * as errorUtils from "./utils/errorHandlers/errorUtils";
-import mongoClient from "./utils/mongo/mongoClient";
+import initMongoConn from "./utils/mongo/mongoClient";
 
 const app = express();
 app.use(cors())

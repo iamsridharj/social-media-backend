@@ -1,7 +1,6 @@
 import httpStatusCode from "http-status-codes";
-import { successHandler } from "../utils/responseHandlers/responseUtils";
 import { BadRequest } from "../utils/errorHandlers/errorClasses";
-import { INVALID_CREDENTIALS, UNAUTHORIZED } from "../utils/errorHandlers/errorKeys";
+import {  UNAUTHORIZED } from "../utils/errorHandlers/errorKeys";
 import UserModel from "../models/User.model";
 
 const jwt = require("jsonwebtoken");
