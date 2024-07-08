@@ -1,28 +1,32 @@
 import mongoose, { Schema, Document } from "mongoose";
-const MongooseSchema = mongoose.Schema;
+import PostModel from "./Post.model";
 
 export interface CommentDoc extends Document {
     comment: string;
     commentedBy: mongoose.Types.ObjectId;
     postId: mongoose.Types.ObjectId;
-    _id: mongoose.Types.ObjectId;
 }
 
-const CommentSchema: Schema = new MongooseSchema({
-    comment: String,
+const CommentSchema: Schema = new Schema({
+    comment: {
+        type: String,
+        required: true,
+    },
     commentedBy: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     postId: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'Post'
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        required: true,
     }
-},
-    {
-        versionKey: false,
-    }
-);
+}, {
+    versionKey: false,
+    timestamps: true,
+});
+
 
 const CommentModel = mongoose.model<CommentDoc>('Comment', CommentSchema);
 export default CommentModel;

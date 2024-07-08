@@ -1,47 +1,54 @@
 import mongoose, { Schema, Document } from "mongoose";
-const MongooseSchema = mongoose.Schema;
 
 export interface PostDoc extends Document {
     title: string;
     description: string;
-    postType: string,
+    postType: 'video' | 'gallery' | 'image';
     author: mongoose.Types.ObjectId;
-    comments: [mongoose.Types.ObjectId];
-    isInWishlist: Boolean;
-    _id: mongoose.Types.ObjectId;
+    comments: mongoose.Types.ObjectId[];
+    objects: mongoose.Types.ObjectId[];
+    isInWishlist: boolean;
 }
 
-
-
-const PostSchema: Schema = new MongooseSchema({
-    title: String,
-    postType: {
+const PostSchema: Schema = new Schema({
+    title: {
         type: String,
         required: true,
-        enum: ['video', 'gallery', 'image'] as const, 
     },
     description: {
         type: String,
         required: true,
     },
+    postType: {
+        type: String,
+        required: true,
+        enum: ['video', 'gallery', 'image'],
+    },
     author: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     comments: [{
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'Comment'
+        type: Schema.Types.ObjectId,
+        ref: 'Comment',
     }],
-    objects:[{
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'File'
+    objects: [{
+        type: Schema.Types.ObjectId,
+        ref: 'File',
     }],
-    isInWishlist: MongooseSchema.Types.Boolean
+    isInWishlist: {
+        type: Boolean,
+        default: false,
     },
-    {
-        versionKey: false,
+    commentCount: {
+        type: Number,
+        default: 0,
     }
-);
+}, {
+    versionKey: false,
+    timestamps: true,
+});
 
 const PostModel = mongoose.model<PostDoc>('Post', PostSchema);
 export default PostModel;

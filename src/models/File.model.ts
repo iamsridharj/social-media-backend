@@ -1,34 +1,33 @@
-import mongoose, { Document } from "mongoose";
-const MongooseSchema = mongoose.Schema;
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface FileDoc extends Document {
-    _id: mongoose.Types.ObjectId;
-    bucketName: String;
-    fileKey: String;
-    fileType: String;
-    fileUrl: String;
+    bucketName: string;
+    fileKey: string;
+    fileType: string;
+    fileUrl: string;
 }
 
-const File = new MongooseSchema({
+const FileSchema: Schema = new Schema({
     bucketName: {
+        type: String,
         required: true,
-        type: String
     },
     fileKey: {
+        type: String,
         required: true,
-        type: String
     },
     fileType: {
-        required: true,
         type: String,
+        required: true,
     },
     fileUrl: {
-        required: true,
         type: String,
+        required: true,
     }
 }, {
-    versionKey: false
-})
+    versionKey: false,
+    timestamps: true,
+});
 
-const FileModel = mongoose.model<FileDoc>('File', File);
+const FileModel = mongoose.model<FileDoc>('File', FileSchema);
 export default FileModel;

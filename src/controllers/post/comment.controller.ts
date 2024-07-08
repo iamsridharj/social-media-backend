@@ -8,7 +8,7 @@ const addComment = async (req, res, next) => {
         const { comment } = req.body;
 
         const commentDoc = await commentService.addComment(postId, userId, comment);
-        successHandler(res, "Comments saved successfully", commentDoc);
+        successHandler(res, "Comment saved successfully", commentDoc);
     } catch (error) {
         next(error);
     }

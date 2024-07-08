@@ -5,16 +5,16 @@ import conn from "../../utils/mongo/mongoClient";
 
 const addPost = async (user, postDetails) => {
     const session = await conn.startSession();
-    session.startTransaction();
-
     try {
-        const userDoc = await User.findOne({ email: user.email });
+        session.startTransaction();
+
+        const userDoc = await User.findOne({ email: user.email }).lean();
         if (!userDoc) {
             throw new ResourceNotFoundError('Post:add: User not found');
         }
 
         const newPost = new Post({ ...postDetails, author: userDoc._id });
-        await newPost.save();
+        await newPost.save({ session });
 
         const post = await Post.findById(newPost._id)
             .populate({
@@ -38,7 +38,8 @@ const addPost = async (user, postDetails) => {
                         path: "fileUrl"
                     },
                 ]
-            });
+            })
+            .session(session);
 
         await session.commitTransaction();
         return post;
@@ -73,11 +74,12 @@ const getAllPosts = async () => {
                     path: "fileUrl"
                 },
             ]
-        });
+        })
+        .lean();
 };
 
 const deletePost = async (postId) => {
-    const deletedPost = await Post.findByIdAndDelete(postId);
+    const deletedPost = await Post.findByIdAndDelete(postId).lean();
     if (!deletedPost) {
         throw new ResourceNotFoundError('Post:delete: Post not found');
     }

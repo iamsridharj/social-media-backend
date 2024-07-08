@@ -1,26 +1,25 @@
 import mongoose, { Schema, Document } from "mongoose";
-const MongooseSchema = mongoose.Schema;
 
 export interface WishlistDoc extends Document {
     author: mongoose.Types.ObjectId;
     postId: mongoose.Types.ObjectId;
-    _id: mongoose.Types.ObjectId;
 }
 
-const WishlistSchema: Schema = new MongooseSchema({
+const WishlistSchema: Schema = new Schema({
     author: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
     },
     postId: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'Post'
+        type: Schema.Types.ObjectId,
+        ref: 'Post',
+        required: true,
     }
-},
-    {
-        versionKey: false,
-    }
-);
+}, {
+    versionKey: false,
+    timestamps: true,
+});
 
 const WishlistModel = mongoose.model<WishlistDoc>('Wishlist', WishlistSchema);
 export default WishlistModel;

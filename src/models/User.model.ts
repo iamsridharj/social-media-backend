@@ -1,37 +1,44 @@
-import mongoose, { Document } from "mongoose";
-const MongooseSchema = mongoose.Schema;
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface UserDoc extends Document {
     firstName: string;
-    email: string;
     lastName: string;
+    email: string;
     password: string;
-    crearedAt: Date;
-    profileImage: mongoose.Types.ObjectId; 
-    _id: mongoose.Types.ObjectId;
+    profileImage: mongoose.Types.ObjectId;
+    createdAt: Date;
 }
 
-const User = new MongooseSchema({
-    firstName: String,
+const UserSchema: Schema = new Schema({
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
     email: {
         type: String,
         required: true,
         unique: true,
     },
-    lastName: String,
-    password: String,
-    profileImage: {
-        type: MongooseSchema.Types.ObjectId,
-        ref: 'File'
+    password: {
+        type: String,
+        required: true,
     },
-    crearedAt: {
-        required: false,
+    profileImage: {
+        type: Schema.Types.ObjectId,
+        ref: 'File',
+    },
+    createdAt: {
         type: Date,
-        default: new Date(),
-    }
+        default: Date.now,
+    },
 }, {
     versionKey: false,
+    timestamps: true,
 });
 
-const UserModel = mongoose.model<UserDoc>('User', User);
+const UserModel = mongoose.model<UserDoc>('User', UserSchema);
 export default UserModel;
